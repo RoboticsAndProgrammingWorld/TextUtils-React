@@ -4,27 +4,28 @@ export default function TextForm(props) {
 	const handleUpClick = () => {
 		let newText = text.toUpperCase();
 		setText(newText);
-		props.showAlert("Converted to uppercase!", 'success')
+		props.showAlert('Converted to uppercase!', 'success');
 	};
 	const handleLoClick = () => {
 		let newText = text.toLowerCase();
 		setText(newText);
-		props.showAlert("Converted to lowercase!", 'success')
+		props.showAlert('Converted to lowercase!', 'success');
 	};
 	const handleCtClick = () => {
 		setText('');
-		props.showAlert("Text Cleared!", 'success')
+		props.showAlert('Text Cleared!', 'success');
 	};
 	const handleCpClick = () => {
 		let textBox = document.getElementById('myBox');
 		textBox.select();
 		navigator.clipboard.writeText(textBox.value);
-		props.showAlert("Copied to Clipboard!", 'success')
+		document.getSelection().removeAllRanges();
+		props.showAlert('Copied to Clipboard!', 'success');
 	};
 	const handleEsClick = () => {
 		let newText = text.split(/[ ]+/);
 		setText(newText.join(' '));
-		props.showAlert("Extra spaces removed!", 'success')
+		props.showAlert('Extra spaces removed!', 'success');
 	};
 	const handleOnChange = (event) => {
 		setText(event.target.value);
@@ -35,33 +36,48 @@ export default function TextForm(props) {
 			<div
 				className='container'
 				style={{ color: props.mode === 'light' ? '#042743' : 'white' }}>
-				<h1>{props.heading}</h1>
+				<h1 className='mb-4'>{props.heading}</h1>
 				<div className='mb-3'>
 					<textarea
 						className='form-control'
 						value={text}
 						onChange={handleOnChange}
 						style={{
-							backgroundColor: props.mode === 'dark' ? 'grey' : 'white',
+							backgroundColor: props.mode === 'dark' ? '#13466e' : 'white',
 							color: props.mode === 'light' ? '#042743' : 'white',
 						}}
 						id='myBox'
 						rows='8'
 					/>
 				</div>
-				<button className='btn btn-primary mx-2 my-1' onClick={handleUpClick}>
+				<button
+					disabled={text.length === 0}
+					className='btn btn-primary mx-1 my-1'
+					onClick={handleUpClick}>
 					Convert to Uppercase
 				</button>
-				<button className='btn btn-primary mx-2 my-1' onClick={handleLoClick}>
+				<button
+					disabled={text.length === 0}
+					className='btn btn-primary mx-1 my-1'
+					onClick={handleLoClick}>
 					Convert to Lowercase
 				</button>
-				<button className='btn btn-primary mx-2 my-1' onClick={handleCtClick}>
+				<button
+					disabled={text.length === 0}
+					className='btn btn-primary mx-1 my-1'
+					onClick={handleCtClick}>
 					Clear Text
 				</button>
-				<button className='btn btn-primary mx-2 my-1' onClick={handleCpClick}>
+				<button
+					disabled={text.length === 0}
+					className='btn btn-primary mx-1 my-1'
+					onClick={handleCpClick}>
 					Copy Text
 				</button>
-				<button className='btn btn-primary mx-2 my-1' onClick={handleEsClick}>
+				<button
+					disabled={text.length === 0}
+					className='btn btn-primary mx-1 my-1'
+					onClick={handleEsClick}>
 					Remove Extra Spaces
 				</button>
 			</div>
@@ -70,16 +86,18 @@ export default function TextForm(props) {
 				style={{ color: props.mode === 'light' ? '#042743' : 'white' }}>
 				<h2>Your text summary</h2>
 				<p>
-					{text.trim() === ''
-						? 0
-						: text.trim().split(/[ ]+/).join(' ').split(' ').length}{' '}
+					{
+						text.split(' ').filter((element) => {
+							return element.length !== 0;
+						}).length
+					}{' '}
 					words, {text.length} characters
 				</p>
 				<p>
 					{0.008 *
-						(text.trim() === ''
-							? 0
-							: text.trim().split(/[ ]+/).join(' ').split(' ').length)}{' '}
+						text.split(' ').filter((element) => {
+							return element.length !== 0;
+						}).length}{' '}
 					Minutes read
 				</p>
 				<p>
@@ -89,7 +107,7 @@ export default function TextForm(props) {
 					Lines
 				</p>
 				<h2>Preview</h2>
-				<p>{text.length>0?text:'Enter something in the text above to preview it here'}</p>
+				<p>{text.length > 0 ? text : 'Nothing to Preview'}</p>
 			</div>
 		</>
 	);
